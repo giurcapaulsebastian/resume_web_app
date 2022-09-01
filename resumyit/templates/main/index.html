@@ -1,263 +1,204 @@
-{% extends 'main/base.html' %}
 {% load static %}
-
-<!-- ================================
-Start SEO blocks
-================================= -->
-{% block title %}{% endblock %}
-{% block decription %}{% endblock %}
-{% block keywords %}{% endblock %}
-<!-- ================================
-END SEO blocks
-================================= -->
-
-<!-- ================================
-Start CSS blocks
-================================= -->
-{% block extend_header %}{% endblock %}
-<!-- ================================
-END CSS blocks
-================================= -->
-
-<!-- ================================
-Start script blocks
-================================= -->
-{% block extend_footer %}{% endblock %}
-<!-- ================================
-END script blocks
-================================= -->
-
-<!-- ================================
-Start Content
-================================= -->
-{% block content %}
-<section>
-  <div class="bannerSection">
-    <div class="container">
-      <div class="row g-4 g-md-3  align-items-center">
-        <div class="col-md-auto order-md-last">
-          <div class="bannerUserImg">
-            <img src="{{me.userprofile.avatar.url}}" alt="{{me.first_name|title}} {{me.last_name|title}} avatar">
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="bannerContent">
-            <h1 class="xlTitle pb-3">Hi, I’m {{user.first_name|title}}, <br> a {{user.userprofile.title}} </br></h1>
-            <p>{{me.userprofile.bio}}</p>
-            <div class="bannerBtnCol">
-              <div class="row">
-                <div class="col-auto">
-                  <a download href="{{me.userprofile.cv.url}}" class="btn btnPrimary">Download Resume</a>
-                </div>
-                <div class="col-auto">
-                  <a href="{% url 'main:contact' %}" class="btn btnOutline">Contact</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sectionSpace pt-0">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-auto">
-          <div class="keySkillCol">
-            <h4 class="smTitle pb-3">Key Skills</h4>
-            {% for sk in me.userprofile.skills.all %}
-            {% if sk.is_key_skill %}
-            <div class="keySkillCard">
-              {% if sk.image %}
-              <div class="ksIconCol">
-                <img src="{{sk.image.url}}" alt="...">
-              </div>
-              {% endif %}
-              <span class="ksText">{{sk.name}}</span>
-            </div>
-            {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-        <div class="col-md">
-          <h4 class="smTitle pb-3">Coding Skills</h4>
-          <div class="progressCol">
-            <div class="progressCard">
-              {% for sk in me.userprofile.skills.all %}
-              {% if sk.is_key_skill %}
-              <div class="progressCol">
-                <span class="progressLbl">{{sk.name}}</span>
-                <div class="row g-2 align-items-center">
-                  <div class="col">
-                    <div class="progress progressStyle">
-                      <div class="progress-bar" role="progressbar" style="width: {{sk.score}}%" aria-valuenow="{{sk.score}}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <span class="pLbl">{{sk.score}}%</span>
-                  </div>
-                </div>
-              </div>
-              {% endif %}
-              {% endfor %}
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sectionSpaceSm lightBg">
-    <div class="container">
-      <div class="row pb-3">
-        <div class="col">
-          <h4 class="smText regular">Certificates</h4>
-        </div>
-
-      </div>
-      <div class="sliderOuter">
-        <div class="swiper certificatesSlider">
-          <div class="swiper-wrapper">
-            {% for c in certificates %}
-            {% if c.is_active %}
-            <div class="swiper-slide">
-              <div class="cardStyle1">
-                <h4 class="mdTitle cs1Title">
-                  <a href="javascript:void(0)">{{c.title}}</a>
-                </h4>
-                <ul class="cardOptionCol">
-                  <li>{{c.date.date}}</li>
-                  <li>{{c.name|title}}</li>
-                </ul>
-                <p>{{c.description}}</p>
-              </div>
-            </div>
-            {% endif %}
-            {% endfor %}
-            
-          </div>
-        </div>            
-        <div class="cert-swiper-button-next swiper-button-next swiperBtnStyle"></div>
-        <div class="cert-swiper-button-prev swiper-button-prev swiperBtnStyle"></div>
-        <div class="swiper-pagination swiperPaginationStyle posInitial"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sectionSpace">
-    <div class="container">
-      <div class="portfolioCol">
-        <div class="row pb-3">
-          <div class="col">
-            <h4 class="smText regular">Featured Work</h4>
-          </div>
-          <div class="col-auto">
-            <a href="{% url 'main:portfolios' %}" class="simpleLink">View all</a>
-          </div>
-        </div>
-        {% for p in portfolio %}
-        {% if p.is_active %}
-        <div class="portfolioCard">
-          <div class="row g-4 align-items-center">
-            <div class="col-md-auto">
-              <div class="portfolioImgCol">
-                <a href="{% url 'main:portfolio' slug=p.slug %}"><img src="{{p.image.url}}" alt="..."></a>
-              </div>
-            </div>
-            <div class="col-md">
-              <div class="portfolioContentCol">
-                <h4 class="lgTitle"><a href="{% url 'main:portfolio' slug=p.slug %}">{{p.name}}</a></h4>
-                <ul class="portfolioOption">
-                  <li><span class="dateLbl">{{p.date.year}}</span></li>
-                </ul>
-                <p>{{p.description}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
-        {% endfor %}
-        
-      </div>
-      <div class="testimonialCol">
-        <h4 class="smText regular d-block">Testimonials</h4>
-        <div class="testimonialSlider">
-          <div class="swiper testimonialSwiper">
-            <div class="swiper-wrapper">
-              {% for t in testimonials %}
-              {% if t.is_active %}
-              <div class="swiper-slide">
-                <div class="testimonialCard">
-                  <div class="row align-items-center">
-                    <div class="col-sm-auto">
-                      <div class="tImgCol">
-                        <img src="{{t.thumbnail.url}}" alt="...">
-                      </div>
-                    </div>
-                    <div class="col-sm">
-                      <div class="tContentCol">
-                        <h4 class="xsTitle bold">{{t.name}} - {{t.role}}</h4>
-                        <p>{{t.quote}}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {% endif %}
-              {% endfor %}
-
-            </div>
-            <div class="test-swiper-button-next swiper-button-next swiperBtnStyle"></div>
-            <div class="test-swiper-button-prev swiper-button-prev swiperBtnStyle"></div>
-          </div>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sebastian Giurca</title>
 
 
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 
-<section>
-  <div class="sectionSpaceSm lightBg">
-    <div class="container">
-      <div class="row pb-3">
-        <div class="col">
-          <h4 class="smText regular">Recent posts</h4>
-        </div>
-        <div class="col-auto">
-          <a href="{% url 'main:blogs' %}" class="simpleLink">View all</a>
-        </div>
-      </div>
-      <div class="row g-3">
-      {% for b in blogs %}
-      {% if b.is_active %}
-        <div class="col-lg-6">
-          <div class="cardStyle1">
-            <h4 class="mdTitle cs1Title"><a href="{% url 'main:blog' slug=b.slug %}">{{b.name}}</a></h4>
-            <ul class="cardOptionCol">
-              <li>{{b.timestamp.date}}</li>
-              <li>{{b.author}}</li>
-            </ul>
-            <p>{{b.description}}</p>
-          </div>
-        </div>
-        {% endif %}
-        {% endfor %}
+	<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&family=Russo+One&display=swap" rel="stylesheet">
 
-      </div>
-    </div>
-  </div>
-</section>
-{% endblock %}
-<!-- ================================
-End Content
-================================= -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/default.css' %}">
+	<link id="theme-style" rel="stylesheet" type="text/css" href="">
+</head>
+<body>
+
+	<section class="s1">
+		<div class="main-container">
+			{% comment %} <div class="greeting-wrapper">
+				<h1>Hi, I'm Sebastian Giurca</h1>
+			</div> {% endcomment %}
+
+
+			<div class="intro-wrapper">
+				<div class="nav-wrapper">
+
+					<!-- Link around dots-wrapper added after tutorial video -->
+					<a href="index.html">
+						<div class="dots-wrapper">
+							<div id="dot-1" class="browser-dot"></div>
+							<div id="dot-2" class="browser-dot"></div>
+							<div id="dot-3" class="browser-dot"></div>
+						</div>
+					</a>
+
+
+					<ul id="navigation">
+						<li><a href="index.html#contact">Contact</a></li>
+
+					</ul>
+				</div>
+
+				<div class="left-column">
+					<img id="profile_pic" src="{% static 'images/profile-photo.png' %}">
+				</div>
+
+				<div class="right-column">
+					<div id="preview-shadow">
+						<div id="preview">
+							<div id="corner-tl" class="corner"></div>
+							<div id="corner-tr" class="corner"></div>
+							<div>
+								<img style="vertical-align:middle" src="{% static 'images/user.svg' %}" width="30" height="30" alt="...">
+								<span style="">Sebastian Giurca</span>
+							</div>
+							<br>
+							<div>
+								<img style="vertical-align:middle" src="{% static 'images/phone.svg' %}" width="30" height="30" alt="...">
+								<span style="">+40753683953</span>
+							</div>
+							<br>
+							<div>
+								<img style="vertical-align:middle" src="{% static 'images/email.svg' %}" width="30" height="30" alt="...">
+								<span style="">giurcapaulsebastian@gmail.com</span>
+							</div>
+							<br>
+							<div>
+								<img style="vertical-align:middle" src="{% static 'images/location.svg' %}" width="30" height="30" alt="...">
+								<span style="">Cluj-Napoca</span>
+							</div>
+							<div id="corner-br" class="corner"></div>
+							<div id="corner-bl" class="corner"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="s2">
+		<div class="main-container">
+
+			<div class="about-wrapper">
+				<div class="about-me">
+					<h4>About me</h4>
+
+					<p>I build new projects just to tickle my brain and love teaching others how they're made.</p>
+
+					<p>While I keep busy teaching courses, I still take interviews in search of a great team & projects that interest me.</p>
+
+
+					<hr>
+
+					<h4>TOP EXPERTISE</h4>
+
+					<p>Backend developer with primary focus on Django: <a target="_blank" href="{% static 'download/resume.pdf' %}">Download Resume</a></p>
+
+					<div id="skills">
+						<ul>
+							<li>Django</li>
+							<li>Python</li>
+							<li>Postgres</li>
+							<li>Celery</li>
+							<li>Docker</li>
+						</ul>
+
+						<ul>
+							<li>HTML/CSS</li>
+							<li>Javascript</li>
+							<li>GIT</li>
+							<li>AWS (RDS/S3)</li>
+							<li>API Integration</li>
+						</ul>
+
+					</div>
+
+				</div>
+
+
+				<div class="social-links">
+
+					<h4>Find me on Linkedin & Github</h3>
+
+					<div class="social-images">
+						<a href="https://www.linkedin.com/in/sebastian-giurca-09714669/" target="_blank"><img src="{% static 'images/49656.png' %}" width="50" height="50"></a>
+						<a href="https://github.com/giurcapaulsebastian" target="_blank"><img src="{% static 'images/github.svg' %}" width="50" height="50"></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="s1">
+		<div class="main-container">
+			<h3 style="text-align: center;">Some of the projects I worked on in my past companies</h3>
+
+			<div class="post-wrapper">
+				<div>
+					<div class="post">
+						<img class="thumbnail" src="{% static 'images/dash.jpg' %}">
+						<div class="post-preview">
+							<h6 class="post-title">Content Management System</h6>
+							<p class="post-intro">Implemented features, unit tested and maintained the store managment system for a chain of Restaurants</p>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<div class="post">
+						<img class="thumbnail" src="{% static 'images/ecom.jpg' %}">
+						<div class="post-preview">
+							<h6 class="post-title">Online Food Order Platform</h6>
+							<p class="post-intro">Implemented features and fixed bugs for a food delivery platform.</p>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<div class="post">
+						<img class="thumbnail" src="{% static 'images/membership site.jpg' %}">
+						<div class="post-preview">
+							<h6 class="post-title">Push Notification Platform</h6>
+							<p class="post-intro">Designed, implemented and tested a platform for sending push notifications to mobile app users via firebase API</p>
+						</div>
+					</div>
+				</div>
+
+			<h3 style="text-align: center;">Visit portofolio app</h3>
+
+			</div>
+		</div>
+	</section>
+
+	<section class="s2">
+		<div class="main-container">
+			<a href=""></a>
+			<h3 style="text-align: center;">Get In Touch</h3>
+
+			<form id="contact-form">
+				<a name="contact"></a>
+
+				<label>Name</label>
+				<input class="input-field" type="text" name="name">
+
+				<label>Subject</label>
+				<input class="input-field" type="text" name="subject">
+
+				<label>Email</label>
+				<input class="input-field" type="text" name="email">
+
+				<label>Message</label>
+				<textarea class="input-field" name="message"></textarea>
+
+				<input id="submit-btn" type="submit" value="Send">
+			</form>
+		</div>
+	</section>
+
+	<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
